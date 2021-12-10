@@ -11,9 +11,10 @@
     "emitDecoratorMetadata": true,
     "noEmit": true,
     "sourceMap": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "skipLibCheck": true,
-    "allowJs": true
+    "allowJs": true,
+    "declaration": false
     //"baseUrl": "./src"
   },
   "exclude": ["node_modules", "public", ".cache", "*.js"],

@@ -39,6 +39,7 @@ export interface MetadataPublishFormDataset {
   tags?: string
   links?: string | EditableMetadataLinks[]
   providerUri?: string
+  zerochainfile: string | File[]
 }
 
 export interface MetadataPublishFormAlgorithm {
@@ -58,6 +59,7 @@ export interface MetadataPublishFormAlgorithm {
   entrypoint: string
   tags?: string
   providerUri?: string
+  zerochainfile: string | File[]
 }
 
 export interface MetadataEditForm {

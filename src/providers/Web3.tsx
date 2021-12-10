@@ -13,6 +13,7 @@ import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
+import RestApiManager, { checkForZcnWallet } from '../utils/restApiManager'
 import {
   EthereumListsChain,
   getNetworkDataById,
@@ -104,6 +105,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
   const [accountEns, setAccountEns] = useState<string>()
+  const [zcnWallet, setZcnWallet] = useState<string>()
+  const [restApiInitOk, setRestApiInitOk] = useState<boolean>(false)
+  const [initError, setInitError] = useState<any>(null)
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
   const [balance, setBalance] = useState<UserBalance>({
     eth: '0',
@@ -146,6 +150,28 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setWeb3Loading(false)
     }
   }, [web3Modal])
+
+  // -----------------------------------
+  // Check if 0chain wallet exists on Etherum wallet when connected in Metamask
+  // -----------------------------------
+
+  const checkZcnWallet = useCallback(async () => {
+    if (!accountId) return
+    try {
+      // const accountEns = await getEnsNameWithWeb3(
+      //   accountId,
+      //   web3Provider,
+      //   `${networkId}`
+      // )
+      const zcnWallet = await checkForZcnWallet(accountId)
+      setZcnWallet(zcnWallet)
+      zcnWallet &&
+        Logger.log(`[0chain] wallet details for ${accountId}:`, zcnWallet)
+      // TODO: Prompt user to connect with ZCN wallet
+    } catch (error) {
+      Logger.error('[0chain] Error: ', error.message)
+    }
+  }, [accountId])
 
   // -----------------------------------
   // Helper: Get user balance
@@ -290,6 +316,29 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     const providerInfo = getProviderInfo(web3Provider)
     setWeb3ProviderInfo(providerInfo)
   }, [web3Provider])
+
+  // -----------------------------------
+  // Get and set ZCN Wallet
+  // -----------------------------------
+  // useEffect(() => {
+  //   checkZcnWallet()
+  // }, [checkZcnWallet])
+
+  // -----------------------------------
+  // Init 0chain API js-client-sdk
+  // -----------------------------------
+  useEffect(() => {
+    const callback = (error) => {
+      if (error) {
+        setInitError(error?.message)
+        return
+      }
+      setRestApiInitOk(true)
+    }
+
+    RestApiManager.init(callback)
+    Logger.log('[0chain] RestApiManager: started')
+  }, [])
 
   // -----------------------------------
   // Logout helper

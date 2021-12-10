@@ -16,6 +16,14 @@
       "required": true
     },
     {
+      "name": "zerochainfile",
+      "label": "Upload File to 0chain",
+      "placeholder": "example.png, example.mp3",
+      "help": "Please enter the file data set file and click \"ADD FILE\" to validate the data.",
+      "type": "zerochainfiles",
+      "required": false
+    },
+    {
       "name": "files",
       "label": "File",
       "placeholder": "e.g. https://file.com/file.json",

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import { format } from 'date-fns'
 
 export function updateQueryStringParameter(
   uri: string,
@@ -66,4 +67,38 @@ export function removeItemFromArray<T>(arr: Array<T>, value: T): Array<T> {
     arr.splice(index, 1)
   }
   return arr
+}
+
+export function parseWalletInfo(ae: {
+  id: string
+  // eslint-disable-next-line camelcase
+  public_key: string
+  secretKey: string
+  mnemonic: string
+  timeStamp: any
+}): {
+  // eslint-disable-next-line camelcase
+  client_id: string
+  // eslint-disable-next-line camelcase
+  client_key: string
+  // eslint-disable-next-line camelcase
+  keys: [{ public_key: string; private_key: string }]
+  mnemonics: string
+  version: string
+  // eslint-disable-next-line camelcase
+  date_created: string
+} {
+  return {
+    client_id: ae.id,
+    client_key: ae.public_key,
+    keys: [
+      {
+        public_key: ae.public_key,
+        private_key: ae.secretKey
+      }
+    ],
+    mnemonics: ae.mnemonic,
+    version: '1.0',
+    date_created: format(ae.timeStamp, `yyyy-MM-dd'T'HH:mm:ssz`)
+  }
 }

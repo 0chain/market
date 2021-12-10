@@ -39,6 +39,7 @@ export const initialValues: Partial<MetadataPublishFormDataset> = {
     name: '',
     symbol: ''
   },
+  zerochainfile: '',
   files: '',
   description: '',
   timeout: 'Forever',

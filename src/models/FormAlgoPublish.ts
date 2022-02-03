@@ -46,6 +46,7 @@ export const initialValues: Partial<MetadataPublishFormAlgorithm> = {
   image: 'node',
   containerTag: 'latest',
   entrypoint: 'node $ALGO',
+  zerochainfile: '',
   files: '',
   description: '',
   algorithmPrivacy: false,

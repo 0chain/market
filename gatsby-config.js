@@ -38,6 +38,18 @@ module.exports = {
         defaultQuality: 80
       }
     },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: 'https://herumi.github.io/bls-wasm/src/bls_c.js'
+      }
+    },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: 'https://herumi.github.io/bls-wasm/browser/bls.js'
+      }
+    },
     'gatsby-transformer-sharp',
     'gatsby-transformer-json',
     {

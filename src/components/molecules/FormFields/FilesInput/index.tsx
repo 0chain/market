@@ -9,6 +9,7 @@ import { fileinfo } from '../../../../utils/provider'
 import { useWeb3 } from '../../../../providers/Web3'
 import { getOceanConfig } from '../../../../utils/ocean'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useZeroChainUuid } from '../../../pages/Publish'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -16,6 +17,7 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [fileUrl, setFileUrl] = useState<string>()
   const { chainId } = useWeb3()
   const newCancelToken = useCancelToken()
+  const { theUuid } = useZeroChainUuid()
 
   function loadFileInfo() {
     const config = getOceanConfig(chainId || 1)
@@ -43,6 +45,20 @@ export default function FilesInput(props: InputProps): ReactElement {
   useEffect(() => {
     loadFileInfo()
   }, [fileUrl])
+
+  useEffect(() => {
+    if (field.name === 'files') {
+      if (theUuid !== '') {
+        setFileUrl(
+          `https://0nft.angel.0chain.net/server/v1/api/download?remote_path=&uuid=${theUuid}`
+        )
+      }
+    }
+    if (theUuid === '') {
+      setFileUrl('')
+      helpers.setValue(undefined)
+    }
+  }, [theUuid])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     // hack so the onBlur-triggered validation does not show,

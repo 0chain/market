@@ -1,0 +1,10 @@
+.input {
+  composes: input from '../../../atoms/Input/InputElement.module.css';
+}
+.hiddenfileinput {
+  position: absolute;
+  width: calc(100% - 105px);
+  height: 43px;
+  opacity: 0;
+  cursor: pointer;
+}

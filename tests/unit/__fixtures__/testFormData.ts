@@ -11,7 +11,8 @@ const testFormData: MetadataPublishFormDataset = {
   timeout: '',
   description: 'description',
   termsAndConditions: true,
-  access: 'Download'
+  access: 'Download',
+  zerochainfile: []
   // links: []
 }
 

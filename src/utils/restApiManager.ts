@@ -35,9 +35,18 @@ class RestApiManager {
     }
   }
 
+  setWalletConfig = (activeWallet) => {
+    return jsClientSdk.setWallet(
+      activeWallet.id,
+      activeWallet.secretKey,
+      activeWallet.public_key
+    )
+  }
+
   getExplorerConfig = async () => {
     let selectedNetwork
     const devnetDomain = encodeURIComponent('devnet-0chain.net')
+    const testnetDomain = encodeURIComponent('testnet-0chain.net')
     const stdDomain = encodeURI('0chain.net')
     let domain = stdDomain
 
@@ -55,10 +64,15 @@ class RestApiManager {
       if (selectedNetwork.includes('.devnet')) {
         selectedNetwork = selectedNetwork.replace('.devnet', '')
         domain = devnetDomain
+      } else if (selectedNetwork.includes('.testnet')) {
+        selectedNetwork = selectedNetwork.replace('.testnet', '')
+        domain = testnetDomain
       }
     } else {
       const isDevnetHost = allowedHosts.includes(devnetDomain)
       if (isDevnetHost) domain = devnetDomain
+      const isTestnetHost = window.location.host.includes(testnetDomain)
+      if (isTestnetHost) domain = testnetDomain
 
       selectedNetwork = window.location.host.replace(`.${domain}`, '')
       LocalStorageManager.setNetwork(selectedNetwork)
@@ -91,7 +105,7 @@ class RestApiManager {
   getRequest = async (hostName: any) => {
     return await fetch(hostName)
       .then((resp) => {
-        if (!resp.ok) throw new Error('Error fetchng explorer settings')
+        if (!resp.ok) throw new Error('Error fetching explorer settings')
 
         return resp.json()
       })
@@ -153,7 +167,7 @@ class RestApiManager {
     allocation,
     remotePath,
     encryptFile,
-    clientJson,
+    shouldCommitMeta,
     option
   ) => {
     return jsClientSdk.uploadObject(
@@ -161,7 +175,7 @@ class RestApiManager {
       allocation,
       remotePath,
       encryptFile,
-      clientJson,
+      shouldCommitMeta,
       option
     )
   }
@@ -188,16 +202,47 @@ class RestApiManager {
     path,
     clientId,
     publicEncryptionKey,
-    expiration,
-    clientJson
+    expiration
   ) => {
     return jsClientSdk.shareObject(
       allocationId,
       path,
       clientId,
       publicEncryptionKey,
-      expiration,
-      clientJson
+      expiration
+    )
+  }
+
+  restoreWallet = async (mnemonic) => {
+    return await jsClientSdk.restoreWallet(mnemonic)
+  }
+
+  getClient = async (mnemonic) => {
+    return await jsClientSdk.getClient(mnemonic)
+  }
+
+  listAllocations = async (clientId) => {
+    return await jsClientSdk.listAllocations(clientId)
+  }
+
+  commitMetaTransaction = async (
+    ae,
+    crudType,
+    // eslint-disable-next-line camelcase
+    allocation_id,
+    path,
+    auth_ticket = undefined,
+    lookup_hash = undefined,
+    metadata = undefined
+  ) => {
+    return await jsClientSdk.commitMetaTransaction(
+      ae,
+      crudType,
+      allocation_id,
+      path,
+      auth_ticket,
+      lookup_hash,
+      metadata
     )
   }
 }

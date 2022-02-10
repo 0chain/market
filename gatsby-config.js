@@ -50,6 +50,13 @@ module.exports = {
         src: 'https://herumi.github.io/bls-wasm/browser/bls.js'
       }
     },
+    {
+      resolve: 'gatsby-plugin-load-script',
+      options: {
+        src: `/wasm_exec.js`,
+        async: false
+      }
+    },
     'gatsby-transformer-sharp',
     'gatsby-transformer-json',
     {

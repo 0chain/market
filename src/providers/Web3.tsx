@@ -25,6 +25,7 @@ import { getEnsName } from '../utils/ens'
 import { UserBalance } from '../@types/TokenBalance'
 import { getOceanBalance } from '../utils/ocean'
 import useNetworkMetadata from '../hooks/useNetworkMetadata'
+import LocalStorageManager from '../utils/localStorageManager'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -337,7 +338,20 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
 
     RestApiManager.init(callback)
-    Logger.log('[0chain] RestApiManager: started')
+    console.log('[0chain] RestApiManager: started')
+  }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (
+        LocalStorageManager.getActiveWallet() !== null &&
+        LocalStorageManager.getActiveWallet() !== ''
+      ) {
+        const jsonWallet = JSON.parse(LocalStorageManager.getActiveWallet())
+        RestApiManager.setWalletConfig(jsonWallet)
+      }
+    }, 2000)
+    return () => clearTimeout(timer)
   }, [])
 
   // -----------------------------------

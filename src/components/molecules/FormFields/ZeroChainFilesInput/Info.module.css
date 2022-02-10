@@ -38,3 +38,14 @@
   color: var(--font-color-text);
   background-color: transparent;
 }
+
+.modal-content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.mnemonic {
+  display: flex;
+  flex-direction: column;
+}

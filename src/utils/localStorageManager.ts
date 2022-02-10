@@ -6,7 +6,7 @@ class LocalStorageManager {
   }
 
   getNetwork = () => {
-    return localStorage.getItem('NETWORK') || 'dev'
+    return localStorage.getItem('NETWORK') || 'angel'
   }
 
   setNetwork = (path: any) => {
@@ -27,6 +27,10 @@ class LocalStorageManager {
 
   setParsedWallet = (wallet: any) => {
     return localStorage.setItem('PARSED_WALLET', wallet)
+  }
+
+  getActiveWallet = () => {
+    return localStorage.getItem('wallet_info')
   }
 
   getParsedWallet = () => {

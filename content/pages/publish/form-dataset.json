@@ -19,7 +19,7 @@
       "name": "zerochainfile",
       "label": "Upload File to 0chain",
       "placeholder": "example.png, example.mp3",
-      "help": "Please enter the file data set file and click \"ADD FILE\" to validate the data.",
+      "help": "Connect your 0chain wallet if you have one or create it and upload your file to 0chain or create a new one to upload your file",
       "type": "zerochainfiles",
       "required": false
     },

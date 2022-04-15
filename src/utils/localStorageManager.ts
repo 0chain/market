@@ -6,7 +6,7 @@ class LocalStorageManager {
   }
 
   getNetwork = () => {
-    return localStorage.getItem('NETWORK') || 'angel'
+    return localStorage.getItem('NETWORK') || 'test'
   }
 
   setNetwork = (path: any) => {

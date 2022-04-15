@@ -59,7 +59,7 @@ class RestApiManager {
     // if (!window.location.host.includes(stdDomain)) {
     if (!allowedHosts.includes(stdDomain)) {
       // TODO: Make it dynamic
-      selectedNetwork = 'angel'
+      selectedNetwork = 'test'
 
       if (selectedNetwork.includes('.devnet')) {
         selectedNetwork = selectedNetwork.replace('.devnet', '')
@@ -245,6 +245,26 @@ class RestApiManager {
       metadata
     )
   }
+
+  getFileMetaDataFromPath = async (
+    // eslint-disable-next-line camelcase
+    allocation_id,
+    path,
+    // eslint-disable-next-line camelcase
+    client_id,
+    // eslint-disable-next-line camelcase
+    private_key,
+    // eslint-disable-next-line camelcase
+    public_key
+  ) => {
+    return await jsClientSdk.getFileMetaDataFromPath(
+      allocation_id,
+      path,
+      client_id,
+      private_key,
+      public_key
+    )
+  }
 }
 
 export default new RestApiManager()
@@ -252,7 +272,7 @@ export default new RestApiManager()
 export async function checkForZcnWallet(clientId: string): Promise<any> {
   const result = await axios({
     method: 'get',
-    url: `https://dev.0chain.net/miner02/v1/client/get?id=${clientId}`,
+    url: `https://test.0chain.net/miner02/v1/client/get?id=${clientId}`,
     responseType: 'stream'
   })
   if (!result || result.status !== 200 || !result.data) return
@@ -262,7 +282,7 @@ export async function checkForZcnWallet(clientId: string): Promise<any> {
 export async function getUUID(authTicket: string): Promise<any> {
   const result = await axios({
     method: 'post',
-    url: `https://0nft.angel.0chain.net/server/v1/api/token`,
+    url: `https://0nft.test.0chain.net/server/v1/api/token`,
     data: { auth_ticket: authTicket },
     responseType: 'stream'
   })
@@ -276,7 +296,7 @@ export async function listFiles(
 ): Promise<any> {
   const result = await axios({
     method: 'get',
-    url: `https://0nft.angel.0chain.net/server/v1/api/download`,
+    url: `https://0nft.test.0chain.net/server/v1/api/download`,
     params: { remote_path: remotePath, uuid: uuid },
     responseType: 'stream'
   })

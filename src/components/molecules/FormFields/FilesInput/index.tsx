@@ -50,7 +50,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     if (field.name === 'files') {
       if (theUuid !== '') {
         setFileUrl(
-          `https://0nft.angel.0chain.net/server/v1/api/download?remote_path=&uuid=${theUuid}`
+          `https://0nft.test.0chain.net/server/v1/api/download?remote_path=&uuid=${theUuid}`
         )
       }
     }

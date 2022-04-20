@@ -257,10 +257,9 @@ export default function ZeroChainFilesInput(props: InputProps): ReactElement {
       /**
        * upload multiple files
        */
-      Logger.log('[0chain] files to be uploaded', files)
       Logger.log('[0chain] json files to be uploaded', jsonFiles)
       if (jsonFiles && jsonFiles.length > 0) {
-        const selectedFiles = [...jsonFiles]
+        const selectedFilesJson = [...jsonFiles]
         if (Object.keys(LocalStorageManager.getActiveWallet()).length > 0) {
           await RestApiManager.getBalanceMethod(activeZeroChainWallet.id)
             .then((response) => {
@@ -268,7 +267,7 @@ export default function ZeroChainFilesInput(props: InputProps): ReactElement {
               // TODO: if zcnBalance === 0
               setZcnBalance(zcnBalance)
               Logger.log('[0chain] ZCN Balance: ', response)
-              selectedFiles.map(async (fileObj) => {
+              selectedFilesJson.map(async (fileObj) => {
                 await RestApiManager.uploadObject(
                   fileObj,
                   allocationId,
@@ -505,7 +504,9 @@ export default function ZeroChainFilesInput(props: InputProps): ReactElement {
                 This are the metadata of the file you just uploaded as encrypted
                 that you should save and upload again:
               </p>
-              <pre>{JSON.stringify(fileMetaDataJson)}</pre>
+              <pre className={styles.jsonContainer}>
+                {JSON.stringify(fileMetaDataJson)}
+              </pre>
               <div className={styles.modalContent}>
                 <Button
                   style="primary"

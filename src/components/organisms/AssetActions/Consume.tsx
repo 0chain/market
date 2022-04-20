@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO, Logger } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
@@ -18,6 +18,11 @@ import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
 import { useIsMounted } from '../../../hooks/useIsMounted'
+import Button from '../../atoms/Button'
+import RestApiManager, { getUUID } from '../../../utils/restApiManager'
+import LocalStorageManager from '../../../utils/localStorageManager'
+import Loader from '../../atoms/Loader'
+import Modal from '../../atoms/Modal'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -65,6 +70,60 @@ export default function Consume({
   const [assetTimeout, setAssetTimeout] = useState('')
   const [data, setData] = useState<OrdersData>()
   const isMounted = useIsMounted()
+  const [isAuthTicketLoading, setIsAuthTicketLoading] = useState(false)
+  const [authTicket, setAuthTicket] = useState<string>()
+  const [openJsonModal, setJsonOpenModal] = useState(false)
+  const [theUuid, setTheUuid] = useState('')
+
+  async function getAuthTicket() {
+    try {
+      setIsAuthTicketLoading(true)
+      const authTicket = await RestApiManager.shareObjectMethod(
+        LocalStorageManager.getDefaultAllocation(),
+        '/testingFile.jpg',
+        '79dacae8b882f8a7e020fdf55403e9c6e711f3d59586433af2b18490f37cf191',
+        'XTNjdLsxHO5+gU6WG9J8au7dvy406FZtQF3DResVx/E=',
+        0
+      )
+      Logger.log('[0chain] getAuthTicket response', authTicket)
+      await RestApiManager.commitMetaTransaction(
+        JSON.parse(LocalStorageManager.getActiveWallet()),
+        'Share',
+        LocalStorageManager.getDefaultAllocation(),
+        '/testingFile.jpg'
+      )
+      setAuthTicket(authTicket)
+      setIsAuthTicketLoading(false)
+      return authTicket
+    } catch (error) {
+      setIsAuthTicketLoading(false)
+      toast.error('Could not get auth ticket')
+      throw new Error(error.message)
+    }
+  }
+
+  const toggleJsonModal = (e) => {
+    e.preventDefault()
+    openJsonModal ? setJsonOpenModal(false) : setJsonOpenModal(true)
+  }
+
+  const getUuId = useCallback(async () => {
+    if (!authTicket) return
+    try {
+      const theUUID = await getUUID(authTicket)
+      setTheUuid(theUUID)
+      setJsonOpenModal(true)
+      theUUID &&
+        Logger.log(`[0chain] UUID for the auth ticket sent is: ${theUUID}`)
+    } catch (error) {
+      toast.error('Could not get UUID')
+      throw new Error(error.message)
+    }
+  }, [authTicket])
+
+  useEffect(() => {
+    getUuId()
+  }, [getUuId])
 
   useEffect(() => {
     if (!ddo || !accountId) return
@@ -193,19 +252,70 @@ export default function Consume({
   )
 
   return (
-    <aside className={styles.consume}>
-      <div className={styles.info}>
-        <div className={styles.filewrapper}>
-          <File file={file} isLoading={fileIsLoading} />
+    <>
+      <aside className={styles.consume}>
+        <div className={styles.info}>
+          <div className={styles.filewrapper}>
+            <File file={file} isLoading={fileIsLoading} />
+          </div>
+          <div className={styles.pricewrapper}>
+            <Price price={price} conversion />
+            {!isInPurgatory && <PurchaseButton />}
+            <br />
+            {hasPreviousOrder && (
+              <Button
+                style="primary"
+                size="small"
+                disabled={isDisabled}
+                onClick={(e: React.SyntheticEvent) => {
+                  e.preventDefault()
+                  getAuthTicket()
+                }}
+              >
+                {isAuthTicketLoading ? <Loader /> : 'Generate Auth Ticket'}
+              </Button>
+            )}
+          </div>
         </div>
-        <div className={styles.pricewrapper}>
-          <Price price={price} conversion />
-          {!isInPurgatory && <PurchaseButton />}
+        {type === 'algorithm' && (
+          <AlgorithmDatasetsListForCompute
+            algorithmDid={ddo.id}
+            dataset={ddo}
+          />
+        )}
+      </aside>
+      <Modal
+        title="0chain encrypted file"
+        onToggleModal={toggleJsonModal}
+        isOpen={openJsonModal}
+      >
+        <div>
+          <p>
+            This is the auth_ticket shared with your wallet to generate the UUID
+            for the file from 0chain:
+          </p>
+          <pre>{authTicket}</pre>
+          <p>
+            This is uuid used to download to build the download link for your
+            file:
+          </p>
+          <pre>{theUuid}</pre>
+          <div className={styles.modalContent}>
+            <Button
+              style="primary"
+              size="small"
+              href={`https://0nft.demo.0chain.net/server/v1/api/download?remote_path=&uuid=${theUuid}`}
+              download
+              target="_blank"
+            >
+              Download Encrypted File
+            </Button>
+            <Button style="ghost" size="small" onClick={toggleJsonModal}>
+              Close
+            </Button>
+          </div>
         </div>
-      </div>
-      {type === 'algorithm' && (
-        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
-      )}
-    </aside>
+      </Modal>
+    </>
   )
 }

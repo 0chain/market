@@ -59,7 +59,7 @@ class RestApiManager {
     // if (!window.location.host.includes(stdDomain)) {
     if (!allowedHosts.includes(stdDomain)) {
       // TODO: Make it dynamic
-      selectedNetwork = 'test'
+      selectedNetwork = 'demo'
 
       if (selectedNetwork.includes('.devnet')) {
         selectedNetwork = selectedNetwork.replace('.devnet', '')
@@ -282,7 +282,7 @@ export async function checkForZcnWallet(clientId: string): Promise<any> {
 export async function getUUID(authTicket: string): Promise<any> {
   const result = await axios({
     method: 'post',
-    url: `https://0nft.test.0chain.net/server/v1/api/token`,
+    url: `https://0nft.demo.0chain.net/server/v1/api/token`,
     data: { auth_ticket: authTicket },
     responseType: 'stream'
   })
@@ -296,7 +296,7 @@ export async function listFiles(
 ): Promise<any> {
   const result = await axios({
     method: 'get',
-    url: `https://0nft.test.0chain.net/server/v1/api/download`,
+    url: `https://0nft.demo.0chain.net/server/v1/api/download`,
     params: { remote_path: remotePath, uuid: uuid },
     responseType: 'stream'
   })

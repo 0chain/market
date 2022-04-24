@@ -18,3 +18,9 @@
 .metaFull + div {
   margin-top: var(--spacer);
 }
+
+.modal-content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}

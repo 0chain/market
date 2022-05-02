@@ -1,0 +1,21 @@
+version: '2.2'
+
+services:
+  ocean-website:
+    container_name: ocean-website
+    build:
+      context: ./
+      dockerfile: ./docker/dockerfile
+    # environment:
+    # - network_url=$network_url
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5
+    ports:
+      - 5001:80
+    networks:
+      - proxy-tier
+
+networks:
+  proxy-tier:
+    driver: bridge

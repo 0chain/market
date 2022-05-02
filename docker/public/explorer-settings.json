@@ -1,0 +1,53 @@
+{
+  "miners": [
+    "https://network_url/miner01/",
+    "https://network_url/miner02/",
+    "https://network_url/miner03/"
+  ],
+  "sharders": [
+    "https://network_url/sharder01/",
+    "https://network_url/sharder02/"
+  ],
+  "blobbers": [
+    "https://network_url/blobber01/",
+    "https://network_url/blobber02/",
+    "https://network_url/blobber03/",
+    "https://network_url/blobber04/",
+    "https://network_url/blobber05/",
+    "https://network_url/blobber06/"
+  ],
+  "readPrice": {
+    "min": 0,
+    "max": 10000000000
+  },
+  "writePrice": {
+    "min": 0,
+    "max": 10000000000
+  },
+  "dataShards": 4,
+  "parityShards": 2,
+  "allocationSize": 2,
+  "tokenLock": 5000000000,
+  "tokenLockDuration": "720h",
+  "maxChallengeCompletionTime": 3600,
+  "chain_id": "0afc093ffb509f059c55478bc1a60351cef7b4e9c008a53a6cc8241ca8617dfe",
+  "clusterName": "0chain-local-cluster",
+  "proxyServerUrl": "https://network_url/proxy",
+  "recorderUrl": "https://network_url/recorder",
+  "currentNetwork": "https://network_url/",
+  "zeroBoxUrl": "https://0box.network_url",
+  "backend": "https://backend.0chain.net",
+  "dataSource": "database",
+  "explorerType": "public",
+  "transaction_timeout": 20,
+  "state ": true,
+  "minLockDemand": 0.1,
+  "eth_node": "https://ropsten.infura.io/v3/f0a254d8d18b4749bd8540da63b3292b",
+  "block_worker": "https://network_url/dns",
+  "signature_scheme": "bls0chain",
+  "min_submit": 50,
+  "min_confirmation": 50,
+  "confirmation_chain_length": 3,
+  "num_keys": 1,
+  "networkPrefix": "dev"
+}
